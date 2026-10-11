@@ -10,3 +10,4 @@ local.properties
 .ruff_cache/
 *.egg-info/
 *.db
+out/
