@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from fastapi import WebSocket
 
 from app.models.protocol import Mode
+from app.services.scam.engine import ScamShield
 from app.services.vad import Segmenter
 
 
@@ -33,6 +34,8 @@ class Participant:
     ptt_active: bool = False
     ptt_buf: bytearray = field(default_factory=bytearray)
     lock: asyncio.Lock = field(default_factory=asyncio.Lock)
+    shield: ScamShield | None = None
+    shield_lock: asyncio.Lock = field(default_factory=asyncio.Lock)
     tasks: set["asyncio.Task[None]"] = field(default_factory=set)
     removal: "asyncio.Task[None] | None" = None
 
@@ -63,6 +66,7 @@ class RoomRegistry:
         grace_s: float,
         join_ttl_s: float,
         on_left: LeftCallback | None = None,
+        shield_factory: Callable[[], ScamShield | None] | None = None,
     ) -> None:
         self._rooms: dict[str, Room] = {}
         self._codes: dict[str, str] = {}
@@ -70,6 +74,7 @@ class RoomRegistry:
         self._grace_s = grace_s
         self._join_ttl_s = join_ttl_s
         self._on_left = on_left
+        self._shield_factory = shield_factory
 
     def __len__(self) -> int:
         return len(self._rooms)
@@ -100,6 +105,7 @@ class RoomRegistry:
             language=language,
             consent=consent,
             segmenter=self._segmenter_factory(),
+            shield=self._shield_factory() if self._shield_factory else None,
         )
         room.participants[p.id] = p
         # A token that is never used must not hold the slot forever.

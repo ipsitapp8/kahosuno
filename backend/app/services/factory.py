@@ -8,6 +8,7 @@ from app.services.indictrans2 import IndicTrans2Translate
 from app.services.pipeline import TranslationPipeline
 from app.services.providers import STTProvider, TranslateProvider, TTSProvider
 from app.services.sarvam import SarvamClient
+from app.services.scam.llm import ChatProvider
 
 
 @dataclass
@@ -15,6 +16,7 @@ class Providers:
     stt: STTProvider
     translate: TranslateProvider
     tts: TTSProvider
+    chat: ChatProvider
     _closers: list[SarvamClient | GnaniClient | IndicTrans2Translate]
 
     def pipeline(self) -> TranslationPipeline:
@@ -51,4 +53,4 @@ def build_providers(settings: Settings) -> Providers:
             "(use 'sarvam' or 'indictrans2')"
         )
     closers += [sarvam, gnani]
-    return Providers(stt=stt, translate=translate, tts=tts, _closers=closers)
+    return Providers(stt=stt, translate=translate, tts=tts, chat=sarvam, _closers=closers)

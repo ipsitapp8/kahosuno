@@ -50,3 +50,18 @@ disconnect and then announces `peer_left`. On reconnect the client sends `hello`
 ## Versioning
 The version is in the URL (`/ws/v1/...`) and in every JSON message (`"v": 1`). Breaking changes bump the
 version. Unknown message types are ignored by clients and answered with `bad_message` by the server.
+
+## Scam shield
+Every finished utterance from a speaker is scored on the **speaker's own words** (original language) over
+a rolling window of their last 5 turns. The result is sent as `scam_alert` to the **listener only**.
+
+- `level`: `none` / `suspicious` (risk 40+) / `high` (risk 70+). Alerts are sent only when the level or category
+  changes. `level: "none"` means the warning is cleared (banner can be dismissed).
+- Levels rise at once but fall only after 2 consecutive calm readings, so the banner does not flicker.
+- `reasons_hinglish` has 1-3 short sentences for the listener, in Hinglish. Empty when `level` is `none`.
+- `category`: a rules category (`credential_request`, `kyc`, `account_block`, `authority`, `impersonation`,
+  `lottery`, `advance_fee`, `courier_scam`, `utility_scam`, `remote_access`, `upi_qr`, `sensitive_info`,
+  `urgency`) or an LLM category (`otp_fraud`, `kyc_fraud`, `digital_arrest`, `other_scam`, ...).
+
+Config (env): `SCAM_ENABLED`, `SCAM_LLM_ENABLED` (rules-only when false or when the LLM fails),
+`SCAM_LLM_TIMEOUT_S` (4), `SCAM_LLM_MIN_INTERVAL_S` (15), `SCAM_LLM_MAX_CALLS` (20 per speaker per call).

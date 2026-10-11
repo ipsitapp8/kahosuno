@@ -31,6 +31,13 @@ class Settings(BaseSettings):
     tts_model: str = "bulbul:v3"
     chat_model: str = "sarvam-105b"
 
+    # Scam shield. Rules always run; the LLM layer is optional and falls back to rules on failure.
+    scam_enabled: bool = True
+    scam_llm_enabled: bool = True
+    scam_llm_timeout_s: float = 4.0
+    scam_llm_min_interval_s: float = 15.0
+    scam_llm_max_calls: int = 20
+
     jwt_secret: SecretStr = SecretStr("change-me")
     jwt_ttl_s: int = 600
     max_frame_bytes: int = 16384

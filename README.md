@@ -8,8 +8,8 @@ Pehli language pair: **Kannada (kn-IN) <-> Hindi (hi-IN)**. Saath mein ek **scam
 
 Kiske liye: pardes mein kaam karne wale mazdoor, unke parivar, aur buzurg log.
 
-> Status: backend ke phases 1-3 ho chuke hain (translation pipeline, rooms, WebSocket, VAD).
-> Scam shield, tone, Android app aur Docker aage ke phases hain. Roadmap neeche hai.
+> Status: backend ke phases 1-4 ho chuke hain (translation pipeline, rooms, WebSocket, VAD, scam shield).
+> Android app, Docker aur tone aage ke phases hain. Roadmap neeche hai.
 
 ## Kaise kaam karta hai
 
@@ -55,9 +55,20 @@ sirf user ki permission se. Join karne ke liye consent zaroori hai.
 
 ## Roadmap
 
-- Phase 4: scam shield (rules + LLM + hysteresis)
+- Phase 4: scam shield (rules + LLM + hysteresis) -- done
 - Phase 5: tone preservation
 - Phase 6: Android app (Kotlin + Compose)
 - Phase 7: Docker, security, final checklist
 - Baad mein: **Odia (od-IN)**. Gnani STT abhi Odia support nahi karta; jab kare tab pair add hogi.
 - Baad mein: Gnani realtime STT WebSocket (`wss://api.vachana.ai/stt/v3/stream`) aur Timbre TTS WebSocket, self-hosted IndicTrans2.
+
+## Scam shield (Phase 4)
+
+Do layers: (1) tez regex rules - English, Hindi, Kannada script, aur romanised Hinglish/Kanglish mein OTP, KYC, PIN/CVV,
+account block, police/"digital arrest", lottery, AnyDesk/screen share, QR/UPI, courier, bijli-kat ki dhamki;
+(2) ek LLM (Sarvam `sarvam-105b`) jo naye tareeke pakadta hai. Dono milkar ek risk score banate hain (40+ peela,
+70+ laal) aur warning sirf **sun-ne wale** ko jaati hai, bolne wale ko nahi.
+
+LLM optional hai: `SCAM_LLM_ENABLED=false` karo ya Sarvam credits khatam ho jaayein, to rules akele chalte rahte hain.
+LLM sirf kabhi-kabhi poocha jaata hai (shak hone par ya har 6 turn mein ek baar, kam se kam 15 second ke gap par),
+isliye free credits bachte hain.

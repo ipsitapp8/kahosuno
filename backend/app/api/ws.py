@@ -76,6 +76,9 @@ async def process_utterance(
                             ),
                         )
                     await send_msg(peer, pr.TtsStart(utterance_id=uid))
+                    shield_task = asyncio.create_task(run_shield(p, peer, ev.original))
+                    p.tasks.add(shield_task)
+                    shield_task.add_done_callback(p.tasks.discard)
                 elif isinstance(ev, AudioEvent):
                     await send_audio(peer, ev.pcm)
                 elif isinstance(ev, DoneEvent) and speaking:
@@ -107,6 +110,18 @@ def start_utterance(
     task = asyncio.create_task(process_utterance(pipeline, metrics, room, p, pcm))
     p.tasks.add(task)
     task.add_done_callback(p.tasks.discard)
+
+
+async def run_shield(p: Participant, listener: Participant, text: str) -> None:
+    """Score what `p` just said and warn `listener` (never `p`). Must never break the call."""
+    if p.shield is None:
+        return
+    try:
+        async with p.shield_lock:  # turns are scored in order
+            async for alert in p.shield.on_turn(text):
+                await send_msg(listener, alert)
+    except Exception:
+        log.exception("scam shield failed", extra={"participant": p.id})
 
 
 async def notify_left(room: Room, gone: Participant) -> None:
