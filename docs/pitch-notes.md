@@ -29,3 +29,9 @@ to first audio.
 1. Two phones join one room, Kannada and Hindi.
 2. Kannada speaker talks; Hindi listener hears Hindi with the on-screen transcript and latency.
 3. A "bank officer" speaker says "OTP batao, warna account block" and the scam banner fires.
+
+## Screenshots (Android emulator, real backend with Gnani Prisma + Timbre)
+- `docs/screenshots/1-join.png`: join screen, large text, Kannada picker, consent.
+- `docs/screenshots/2-call-translation.png`: a Hindi sentence arrives as large Kannada text, original small, delay chip.
+- `docs/screenshots/3-scam-danger.png`: red scam banner with Hinglish reasons and the one-tap "Call kaato".
+- `docs/screenshots/4-history.png`: call history, metadata only.

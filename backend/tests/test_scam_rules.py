@@ -150,3 +150,26 @@ def test_reasons_are_hinglish_and_ranked() -> None:
     assert res.top_category == "credential_request"
     assert res.reasons()[0].startswith("Aapse OTP")
     assert len(res.reasons()) <= 3
+
+
+# Real speech-to-text output spells acronyms out letter by letter. Found on the emulator:
+# Gnani returned "के वाई सी" and "ओ टी पी", which the first version of the rules missed.
+SPELLED_OUT_SCAMS: list[tuple[str, int]] = [
+    ("मैं बैंक से बोल रहा हूँ, आपका के वाई सी अपडेट नहीं हुआ, तुरंत अपना ओ टी पी बताइये।", RED),
+    ("आपका के वाई सी पूरा नहीं है, ओ.टी.पी. बताइए।", RED),
+    ("अपना सी वी वी और पिन बताइए।", RED),
+    ("Sir your K Y C has expired, please tell me the O T P now.", RED),
+    ("Share the c v v and pin of your card.", RED),
+    ("ನಿಮ್ಮ ಕೆ ವೈ ಸಿ ಅಪ್‌ಡೇಟ್ ಆಗಿಲ್ಲ, ಓ ಟಿ ಪಿ ಹೇಳಿ.", RED),
+]
+
+
+@pytest.mark.parametrize(("text", "minimum"), SPELLED_OUT_SCAMS)
+def test_spelled_out_acronyms_are_still_caught(text: str, minimum: int) -> None:
+    res = score_rules([text])
+    assert res.risk >= minimum, f"risk {res.risk} {res.categories} for: {text}"
+
+
+def test_spelled_out_warning_is_still_a_warning() -> None:
+    for text in ("ओ टी पी किसी को मत बताइए।", "Never tell anyone your O T P."):
+        assert "credential_request" not in score_rules([text]).categories, text

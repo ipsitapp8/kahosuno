@@ -44,14 +44,19 @@ _NEGATION = re.compile(
     re.IGNORECASE,
 )
 
-SECRET = r"otp|pin|cvv|password|card number|upi pin"
-SECRET_HI = "ओटीपी|ओ\\.?टी\\.?पी|पिन|सीवीवी|पासवर्ड|कार्ड नंबर"
-SECRET_KN = f"ಓಟಿಪಿ|ಒಟಿಪಿ|ಪಿನ್|ಸಿವಿವಿ|ಪಾಸ್{ZWNJ}?ವರ್ಡ್|ಕಾರ್ಡ್ ನಂಬರ್"
+# Speech recognisers often spell acronyms out ("ओ टी पी", "के वाई सी", "K Y C"), so the letters
+# of OTP / KYC / CVV may be separated by spaces or dots.
+SECRET = r"o[\s.]?t[\s.]?p|pin|c[\s.]?v[\s.]?v|password|card number|upi pin"
+SECRET_HI = "ओ[\\s.]*टी[\\s.]*पी|पिन|सी[\\s.]*वी[\\s.]*वी|पासवर्ड|कार्ड नंबर"
+SECRET_KN = f"[ಓಒ][\\s.]*ಟಿ[\\s.]*ಪಿ|ಪಿನ್|ಸಿ[\\s.]*ವಿ[\\s.]*ವಿ|ಪಾಸ್{ZWNJ}?ವರ್ಡ್|ಕಾರ್ಡ್ ನಂಬರ್"
 GIVE_EN = (
     r"tell|share|give|send|read(?: out)?|provide|batao|bata do|bata de|bata dena|bataiye|bolo|boliye|dijiye|dena|"
     r"de do|heli|helu|kodi|kodu|kalisi"
 )
-GIVE_HI = "बताइए|बताओ|बताएं|बता दो|बोलिए|बोलो|दीजिए|दीजिये|दो(?![ऀ-ॿ])|भेजिए|भेजो|शेयर"
+GIVE_HI = (
+    "बताइए|बताइये|बताईये|बताओ|बताएं|बताये|बता दो|बता दीजिए|बोलिए|बोलिये|बोलो|दीजिए|दीजिये|"
+    "दो(?![ऀ-ॿ])|भेजिए|भेजिये|भेजो|शेयर"
+)
 GIVE_KN = "ಹೇಳಿ|ಹೇಳು|ಕೊಡಿ|ಕೊಡು|ಕಳುಹಿಸಿ|ಶೇರ್"
 GAP = r"[^.?!।]{0,40}"
 
@@ -73,10 +78,10 @@ RULES: tuple[Rule, ...] = (
             "|".join(
                 [
                     _latin(rf"(?:{GIVE_EN}){GAP}\b(?:{SECRET})"),
-                    _latin(rf"(?:{SECRET}){GAP}\b(?:{GIVE_EN})"),
-                    _indic(rf"(?:{SECRET_HI}){GAP}(?:{GIVE_HI})"),
+                    _latin(rf"(?:{SECRET})\.?{GAP}\b(?:{GIVE_EN})"),
+                    _indic(rf"(?:{SECRET_HI})\.?{GAP}(?:{GIVE_HI})"),
                     _indic(rf"(?:{GIVE_HI}){GAP}(?:{SECRET_HI})"),
-                    _indic(rf"(?:{SECRET_KN}){GAP}(?:{GIVE_KN})"),
+                    _indic(rf"(?:{SECRET_KN})\.?{GAP}(?:{GIVE_KN})"),
                     _indic(rf"(?:{GIVE_KN}){GAP}(?:{SECRET_KN})"),
                     # romanised words next to a Hindi/Kannada-script request verb and vice versa
                     _latin(rf"(?:{SECRET}){GAP}") + rf"(?:{GIVE_HI}|{GIVE_KN})",
@@ -87,17 +92,22 @@ RULES: tuple[Rule, ...] = (
         negatable=True,
     ),
     # --- the secret merely being mentioned ---
-    Rule("sensitive_info", 30, _rx(r"otp|one[- ]time password", "ओटीपी|ओ\\.?टी\\.?पी|ಓಟಿಪಿ|ಒಟಿಪಿ")),
+    Rule(
+        "sensitive_info",
+        30,
+        _rx(r"o[\s.]?t[\s.]?p|one[- ]time password", "ओ[\\s.]*टी[\\s.]*पी|[ಓಒ][\\s.]*ಟಿ[\\s.]*ಪಿ"),
+    ),
     Rule(
         "sensitive_info",
         40,
         _rx(
-            r"cvv|atm pin|upi pin|card number|pin(?! ?code)|password",
-            f"सीवीवी|पिन(?! ?कोड)|पासवर्ड|कार्ड नंबर|ಸಿವಿವಿ|ಪಿನ್|ಪಾಸ್{ZWNJ}?ವರ್ಡ್|ಕಾರ್ಡ್ ನಂಬರ್",
+            r"c[\s.]?v[\s.]?v|atm pin|upi pin|card number|pin(?! ?code)|password",
+            f"सी[\\s.]*वी[\\s.]*वी|पिन(?! ?कोड)|पासवर्ड|कार्ड नंबर|ಸಿ[\\s.]*ವಿ[\\s.]*ವಿ|ಪಿನ್|"
+            f"ಪಾಸ್{ZWNJ}?ವರ್ಡ್|ಕಾರ್ಡ್ ನಂಬರ್",
         ),
     ),
     # --- KYC / identity documents ---
-    Rule("kyc", 30, _rx(r"kyc", "केवाईसी|ಕೆವೈಸಿ")),
+    Rule("kyc", 30, _rx(r"k[\s.]?y[\s.]?c", "के[\\s.]*वाई[\\s.]*सी|ಕೆ[\\s.]*ವೈ[\\s.]*ಸಿ")),
     Rule("kyc", 15, _rx(r"aadhaar|aadhar|pan card|pan number", "आधार|पैन कार्ड|ಆಧಾರ್|ಪ್ಯಾನ್ ಕಾರ್ಡ್")),
     # --- account / card / SIM about to be blocked ---
     Rule(
@@ -259,8 +269,26 @@ class RuleResult:
         return [REASONS_HINGLISH[c] for c in ranked[:limit]]
 
 
+_CLAUSE_END = ",;.।?!"
+
+
 def _negated(text: str, start: int, end: int) -> bool:
-    return bool(_NEGATION.search(text[max(0, start - 14) : end + 14]))
+    """Is a sharing request negated ("never share...") within its own clause?
+
+    A "nahi" in the previous clause ("KYC update nahi hua, OTP batao") must not cancel the
+    request, so the look-around stops at commas and sentence ends.
+    """
+    before = text[max(0, start - 30) : start]
+    for i in range(len(before) - 1, -1, -1):
+        if before[i] in _CLAUSE_END:
+            before = before[i + 1 :]
+            break
+    after = text[end : end + 14]
+    for i, ch in enumerate(after):
+        if ch in _CLAUSE_END:
+            after = after[:i]
+            break
+    return bool(_NEGATION.search(before + text[start:end] + after))
 
 
 def score_rules(turns: list[str]) -> RuleResult:
