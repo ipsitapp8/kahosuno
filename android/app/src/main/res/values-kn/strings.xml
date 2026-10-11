@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kannada strings were written by an AI assistant: please have a native speaker review them. -->
+<resources>
+    <string name="app_name">ಭಾರತ್ ಕಾಲ್ ಅಸಿಸ್ಟೆಂಟ್</string>
+
+    <string name="join_title">ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ</string>
+    <string name="join_subtitle">ಇಬ್ಬರೂ ತಮ್ಮ ತಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡುತ್ತಾರೆ. ಆ್ಯಪ್ ತಕ್ಷಣ ಅನುವಾದ ಮಾಡುತ್ತದೆ.</string>
+    <string name="your_name">ನಿಮ್ಮ ಹೆಸರು</string>
+    <string name="your_language">ನೀವು ಮಾತನಾಡುವ ಭಾಷೆ</string>
+    <string name="new_room">ಹೊಸ ಕೊಠಡಿ</string>
+    <string name="join_room">ಕೋಡ್‌ನಿಂದ ಸೇರಿ</string>
+    <string name="room_code">ಕೊಠಡಿ ಕೋಡ್ (6 ಅಂಕಿ)</string>
+    <string name="consent_text">ಅನುವಾದಕ್ಕಾಗಿ ನನ್ನ ಧ್ವನಿಯನ್ನು ಸರ್ವರ್‌ಗೆ ಕಳುಹಿಸಲು ನಾನು ಒಪ್ಪುತ್ತೇನೆ. ಯಾವುದೇ ಆಡಿಯೋ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ.</string>
+    <string name="start_call">ಕರೆ ಶುರು ಮಾಡಿ</string>
+    <string name="join_call">ಕರೆಗೆ ಸೇರಿ</string>
+    <string name="working">ದಯವಿಟ್ಟು ಕಾಯಿರಿ…</string>
+    <string name="error_name_empty">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು ಬರೆಯಿರಿ</string>
+    <string name="error_consent">ಒಪ್ಪಿಗೆಗಾಗಿ ಬಾಕ್ಸ್ ಮೇಲೆ ಟಿಕ್ ಮಾಡಿ</string>
+    <string name="error_code">6 ಅಂಕಿಯ ಕೊಠಡಿ ಕೋಡ್ ಬರೆಯಿರಿ</string>
+    <string name="error_network">ಸರ್ವರ್ ತಲುಪಲು ಆಗುತ್ತಿಲ್ಲ. ಸೆಟ್ಟಿಂಗ್ಸ್‌ನಲ್ಲಿ ಸರ್ವರ್ ವಿಳಾಸ ಪರಿಶೀಲಿಸಿ.</string>
+    <string name="error_server">ಸರ್ವರ್ ಹೇಳಿದ್ದು: %1$s</string>
+    <string name="permission_needed">ಮಾತನಾಡಲು ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ಬೇಕು. ದಯವಿಟ್ಟು ಅನುಮತಿಸಿ.</string>
+
+    <string name="connecting">ಸಂಪರ್ಕಿಸುತ್ತಿದೆ…</string>
+    <string name="reconnecting">ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ. ಮತ್ತೆ ಸಂಪರ್ಕಿಸುತ್ತಿದೆ…</string>
+    <string name="waiting_peer">ಇನ್ನೊಬ್ಬರಿಗಾಗಿ ಕಾಯುತ್ತಿದೆ</string>
+    <string name="share_code">ಕೊಠಡಿ ಕೋಡ್: %1$s\nಈ ಕೋಡ್ ಅನ್ನು ಇನ್ನೊಬ್ಬರಿಗೆ ಹೇಳಿ.</string>
+    <string name="in_call_with">%1$s ಜೊತೆ ಮಾತನಾಡುತ್ತಿದ್ದೀರಿ</string>
+    <string name="call_ended">ಕರೆ ಮುಗಿಯಿತು</string>
+    <string name="call_ended_connection">ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ. ಕರೆ ಮುಗಿಯಿತು.</string>
+    <string name="call_ended_error">ಕರೆ ಮುಗಿಯಿತು: %1$s</string>
+    <string name="back_to_home">ಮುಖ್ಯ ಪರದೆಗೆ ಹಿಂತಿರುಗಿ</string>
+    <string name="mute">ಮ್ಯೂಟ್</string>
+    <string name="unmute">ಅನ್‌ಮ್ಯೂಟ್</string>
+    <string name="speaker">ಸ್ಪೀಕರ್</string>
+    <string name="earpiece">ಇಯರ್‌ಪೀಸ್</string>
+    <string name="hang_up">ಕರೆ ಕಟ್ ಮಾಡಿ</string>
+    <string name="mode_auto">ಆಟೋ</string>
+    <string name="mode_ptt">ಒತ್ತಿ ಮಾತನಾಡಿ</string>
+    <string name="hold_to_talk">ಮಾತನಾಡಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ</string>
+    <string name="you">ನೀವು</string>
+    <string name="they_said_label">ಹೀಗೆ ಕೇಳಿಸಿತು</string>
+    <string name="original_label">ಮೂಲ</string>
+    <string name="latency_value">%1$d ಮಿ.ಸೆ.</string>
+    <string name="latency_label">ವಿಳಂಬ</string>
+    <string name="tone_calm">ಶಾಂತ</string>
+    <string name="tone_excited">ಉತ್ಸಾಹ</string>
+    <string name="tone_angry">ಕೋಪ</string>
+    <string name="tone_sad">ದುಃಖ</string>
+    <string name="empty_transcript">ಮಾತನಾಡಲು ಶುರು ಮಾಡಿ. ಹೇಳಿದ್ದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.</string>
+
+    <string name="scam_suspicious_title">ಎಚ್ಚರ: ಈ ಕರೆ ಮೋಸದ್ದಾಗಿರಬಹುದು</string>
+    <string name="scam_high_title">ಅಪಾಯ: ಬಹುತೇಕ ಮೋಸ. OTP, PIN ಅಥವಾ ಹಣ ಕೊಡಬೇಡಿ.</string>
+    <string name="call_kaato">ಕಾಲ್ ಕಾಟೋ (ಕಟ್ ಮಾಡಿ)</string>
+    <string name="dismiss">ಅರ್ಥವಾಯಿತು</string>
+
+    <string name="history_title">ಕರೆ ಇತಿಹಾಸ</string>
+    <string name="history_empty">ಇನ್ನೂ ಯಾವುದೇ ಕರೆ ಇಲ್ಲ</string>
+    <string name="history_item_title">%1$s (%2$s)</string>
+    <string name="history_item_detail">%1$s · %2$s · ವಿಳಂಬ %3$d ಮಿ.ಸೆ.</string>
+    <string name="history_scam_none">ಮೋಸದ ಎಚ್ಚರಿಕೆ ಇಲ್ಲ</string>
+    <string name="history_scam_suspicious">ಸಂಶಯಾಸ್ಪದ ಕರೆ</string>
+    <string name="history_scam_high">ಮೋಸದ ಎಚ್ಚರಿಕೆ ತೋರಿಸಲಾಗಿದೆ</string>
+    <string name="history_note">ಕರೆಯ ವಿವರಗಳನ್ನು ಮಾತ್ರ ಉಳಿಸಲಾಗುತ್ತದೆ. ಆಡಿಯೋ ಮತ್ತು ಪಠ್ಯ ಎಂದಿಗೂ ಉಳಿಸುವುದಿಲ್ಲ.</string>
+
+    <string name="settings_title">ಸೆಟ್ಟಿಂಗ್ಸ್</string>
+    <string name="server_url">ಸರ್ವರ್ ವಿಳಾಸ</string>
+    <string name="server_url_hint">ಉದಾಹರಣೆ: https://your-app.onrender.com</string>
+    <string name="default_mode">ಮಾತನಾಡುವ ವಿಧಾನ</string>
+    <string name="font_size">ಅಕ್ಷರದ ಗಾತ್ರ</string>
+    <string name="font_size_sample">ಅಕ್ಷರಗಳು ಇಷ್ಟು ದೊಡ್ಡದಾಗಿ ಕಾಣಿಸುತ್ತವೆ.</string>
+    <string name="back">ಹಿಂದೆ</string>
+    <string name="open_history">ಇತಿಹಾಸ</string>
+    <string name="open_settings">ಸೆಟ್ಟಿಂಗ್ಸ್</string>
+
+    <string name="notification_channel">ನಡೆಯುತ್ತಿರುವ ಕರೆ</string>
+    <string name="notification_title">ಕರೆ ನಡೆಯುತ್ತಿದೆ</string>
+    <string name="notification_text">ನಿಮ್ಮ ಕರೆಯನ್ನು ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ</string>
+    <string name="notification_hang_up">ಕರೆ ಕಟ್ ಮಾಡಿ</string>
+</resources>

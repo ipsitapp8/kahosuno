@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bharat Call Assistant</string>
+
+    <!-- Join -->
+    <string name="join_title">Talk in your own language</string>
+    <string name="join_subtitle">Both people speak their own language. The app translates live.</string>
+    <string name="your_name">Your name</string>
+    <string name="your_language">Language you speak</string>
+    <string name="new_room">New room</string>
+    <string name="join_room">Join with code</string>
+    <string name="room_code">Room code (6 digits)</string>
+    <string name="consent_text">I agree that my voice is sent to the server to be translated. No audio is saved.</string>
+    <string name="start_call">Start call</string>
+    <string name="join_call">Join call</string>
+    <string name="working">Please wait…</string>
+    <string name="error_name_empty">Please enter your name</string>
+    <string name="error_consent">Please tick the box to agree</string>
+    <string name="error_code">Enter the 6 digit room code</string>
+    <string name="error_network">Cannot reach the server. Check the server address in Settings.</string>
+    <string name="error_server">Server said: %1$s</string>
+    <string name="permission_needed">Microphone permission is needed to talk. Please allow it.</string>
+
+    <!-- Call -->
+    <string name="connecting">Connecting…</string>
+    <string name="reconnecting">Connection lost. Reconnecting…</string>
+    <string name="waiting_peer">Waiting for the other person</string>
+    <string name="share_code">Room code: %1$s\nTell it to the other person.</string>
+    <string name="in_call_with">In call with %1$s</string>
+    <string name="call_ended">Call ended</string>
+    <string name="call_ended_connection">Connection lost. The call ended.</string>
+    <string name="call_ended_error">The call ended: %1$s</string>
+    <string name="back_to_home">Back to home</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="speaker">Speaker</string>
+    <string name="earpiece">Earpiece</string>
+    <string name="hang_up">Hang up</string>
+    <string name="mode_auto">Auto</string>
+    <string name="mode_ptt">Push to talk</string>
+    <string name="hold_to_talk">Hold to talk</string>
+    <string name="you">You</string>
+    <string name="they_said_label">Heard as</string>
+    <string name="original_label">Original</string>
+    <string name="latency_value">%1$d ms</string>
+    <string name="latency_label">Delay</string>
+    <string name="tone_calm">Calm</string>
+    <string name="tone_excited">Excited</string>
+    <string name="tone_angry">Angry</string>
+    <string name="tone_sad">Sad</string>
+    <string name="empty_transcript">Start talking. What is said will appear here.</string>
+
+    <!-- Scam alert -->
+    <string name="scam_suspicious_title">Careful: this call may be a scam</string>
+    <string name="scam_high_title">DANGER: likely scam. Do not share OTP, PIN or money.</string>
+    <string name="call_kaato">Call kaato (hang up)</string>
+    <string name="dismiss">I understand</string>
+
+    <!-- History -->
+    <string name="history_title">Call history</string>
+    <string name="history_empty">No calls yet</string>
+    <string name="history_item_title">%1$s (%2$s)</string>
+    <string name="history_item_detail">%1$s · %2$s · delay %3$d ms</string>
+    <string name="history_scam_none">No scam warning</string>
+    <string name="history_scam_suspicious">Suspicious call</string>
+    <string name="history_scam_high">Scam warning shown</string>
+    <string name="history_note">Only call details are saved. Audio and text are never stored.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="server_url">Server address</string>
+    <string name="server_url_hint">Example: https://your-app.onrender.com</string>
+    <string name="default_mode">Default talking mode</string>
+    <string name="font_size">Text size</string>
+    <string name="font_size_sample">This is how big the text will be.</string>
+    <string name="back">Back</string>
+    <string name="open_history">History</string>
+    <string name="open_settings">Settings</string>
+
+    <!-- Notification -->
+    <string name="notification_channel">Ongoing call</string>
+    <string name="notification_title">Call in progress</string>
+    <string name="notification_text">Translating your call</string>
+    <string name="notification_hang_up">Hang up</string>
+</resources>

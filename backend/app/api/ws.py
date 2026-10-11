@@ -173,6 +173,7 @@ async def handle_text(
     elif isinstance(msg, pr.Ping):
         await send_msg(p, pr.Pong())
     elif isinstance(msg, pr.Bye):
+        p.said_bye = True
         return False
     return True
 

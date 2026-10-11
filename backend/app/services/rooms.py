@@ -38,6 +38,7 @@ class Participant:
     shield_lock: asyncio.Lock = field(default_factory=asyncio.Lock)
     tasks: set["asyncio.Task[None]"] = field(default_factory=set)
     removal: "asyncio.Task[None] | None" = None
+    said_bye: bool = False  # left on purpose: no reconnect grace period
 
 
 @dataclass(eq=False)
@@ -118,6 +119,7 @@ class RoomRegistry:
             p.removal.cancel()
             p.removal = None
         old, p.ws = p.ws, ws
+        p.said_bye = False
         p.segmenter.reset()
         p.ptt_active = False
         p.ptt_buf.clear()
@@ -127,7 +129,8 @@ class RoomRegistry:
         if p.ws is not ws:  # a newer connection already replaced this one
             return
         p.ws = None
-        self._schedule_removal(room, p, self._grace_s)
+        # Hanging up on purpose leaves at once; only a dropped connection gets the grace period.
+        self._schedule_removal(room, p, 0 if p.said_bye else self._grace_s)
 
     def _schedule_removal(self, room: Room, p: Participant, delay: float) -> None:
         if p.removal:

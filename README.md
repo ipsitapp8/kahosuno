@@ -72,3 +72,34 @@ account block, police/"digital arrest", lottery, AnyDesk/screen share, QR/UPI, c
 LLM optional hai: `SCAM_LLM_ENABLED=false` karo ya Sarvam credits khatam ho jaayein, to rules akele chalte rahte hain.
 LLM sirf kabhi-kabhi poocha jaata hai (shak hone par ya har 6 turn mein ek baar, kam se kam 15 second ke gap par),
 isliye free credits bachte hain.
+
+## Android app (Phase 6)
+
+Kotlin + Jetpack Compose + Material 3, MVVM + Hilt. Folder: `android/`.
+
+- **Call service**: ek foreground service call ko zinda rakhti hai (screen band hone par bhi). WebSocket, mic
+  (`AudioRecord`, VOICE_COMMUNICATION, 16 kHz) aur playback (`AudioTrack`) sab ek `CallSession` mein hain.
+- **Screens**: Join (naam, bhasha, naya room ya code se jud-na, consent), Call (transcript bubbles - bada text
+  translated, chhota original; tone chip; delay; mute; speaker; Auto/Push-to-talk; hang up), History (sirf metadata),
+  Settings (server address, mode, text size).
+- **Scam banner**: peela = shak, laal = khatra. Hinglish wajah, zor ki vibration, aur ek tap mein **"Call kaato"**.
+- **Bhashayein**: ऐप ke strings English, Hindi, Kannada mein hain. Kannada strings ko kisi native speaker se
+  check karwa lein.
+- **Bade akshar**: Settings mein text size slider (system size se bhi bada ho sakta hai), badi buttons (56-68 dp).
+
+### Chalane ke steps
+
+1. Backend chalayein: `cd backend && .venv\Scripts\uvicorn app.main:app --port 8000`
+2. Android Studio mein `android/` folder kholein. Pehli baar Gradle sync SDK 35 download karega.
+3. Emulator banayein (Pixel, API 34/35) aur uske **Extended controls > Microphone** mein
+   "Virtual microphone uses host audio input" on karein.
+4. App chalayein. Emulator mein server address default `http://10.0.2.2:8000` hai (ye emulator se aapke PC ka localhost hai).
+   Phone par chalana ho to Settings mein PC ka LAN IP daalein, ya Render ka `https://...onrender.com` address.
+5. Do emulator/phones chahiye (ek "New room", doosra "Join with code"). Ek hi emulator par test karna ho to
+   dusre ke liye bhi phone ya doosra emulator use karein.
+
+Command line se: `cd android && gradlew.bat assembleDebug` aur `gradlew.bat test`
+(`ANDROID_HOME` ya `android/local.properties` mein `sdk.dir=...` chahiye).
+
+Render free tier: pehli request ko ~1 minute lag sakta hai (server so jaata hai). Demo se pehle ek baar
+`https://your-app.onrender.com/health` kholkar jaga lein.

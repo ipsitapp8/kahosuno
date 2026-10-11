@@ -221,3 +221,19 @@ def test_mode_switch_mid_call(client: TestClient, pipeline: FakePipeline, mode: 
             speak(wa, speech_pcm())
             sync(wa)
             assert pipeline.calls == []
+
+
+def test_bye_leaves_immediately_but_a_dropped_connection_gets_grace() -> None:
+    """A deliberate hang-up must not make the other person wait out the reconnect window."""
+    from app.main import create_app
+    from tests.conftest import FakePipeline, make_settings
+
+    app = create_app(make_settings(reconnect_grace_s=60.0), FakePipeline())  # a very long grace
+    with TestClient(app) as client:
+        a, b = open_room(client)
+        with client.websocket_connect(url(b)) as wb:
+            with client.websocket_connect(url(a)) as wa:
+                join_both(client, wa, wb, a, b)
+                wa.send_json({"v": 1, "type": "bye"})
+            left = collect_until(wb, "peer_left")[-1]  # would hang for 60 s without the fix
+            assert isinstance(left, dict) and left["name"] == "Ramesh"

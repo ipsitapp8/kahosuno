@@ -11,3 +11,6 @@ local.properties
 *.egg-info/
 *.db
 out/
+
+*.iml
+.kotlin/

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">भारत कॉल असिस्टेंट</string>
+
+    <string name="join_title">अपनी भाषा में बात करें</string>
+    <string name="join_subtitle">दोनों लोग अपनी-अपनी भाषा बोलते हैं। ऐप तुरंत अनुवाद करता है।</string>
+    <string name="your_name">आपका नाम</string>
+    <string name="your_language">आप जो भाषा बोलते हैं</string>
+    <string name="new_room">नया कमरा</string>
+    <string name="join_room">कोड से जुड़ें</string>
+    <string name="room_code">कमरे का कोड (6 अंक)</string>
+    <string name="consent_text">मैं सहमत हूँ कि अनुवाद के लिए मेरी आवाज़ सर्वर पर भेजी जाएगी। कोई ऑडियो सेव नहीं होता।</string>
+    <string name="start_call">कॉल शुरू करें</string>
+    <string name="join_call">कॉल में जुड़ें</string>
+    <string name="working">कृपया प्रतीक्षा करें…</string>
+    <string name="error_name_empty">कृपया अपना नाम लिखें</string>
+    <string name="error_consent">सहमति के लिए बॉक्स पर टिक करें</string>
+    <string name="error_code">6 अंकों का कमरे का कोड लिखें</string>
+    <string name="error_network">सर्वर तक नहीं पहुँच पा रहे। सेटिंग्स में सर्वर का पता जाँचें।</string>
+    <string name="error_server">सर्वर ने कहा: %1$s</string>
+    <string name="permission_needed">बात करने के लिए माइक्रोफ़ोन की अनुमति चाहिए। कृपया अनुमति दें।</string>
+
+    <string name="connecting">जोड़ रहे हैं…</string>
+    <string name="reconnecting">कनेक्शन टूट गया। फिर से जोड़ रहे हैं…</string>
+    <string name="waiting_peer">दूसरे व्यक्ति का इंतज़ार है</string>
+    <string name="share_code">कमरे का कोड: %1$s\nयह कोड दूसरे व्यक्ति को बताइए।</string>
+    <string name="in_call_with">%1$s से बात हो रही है</string>
+    <string name="call_ended">कॉल खत्म हुई</string>
+    <string name="call_ended_connection">कनेक्शन टूट गया। कॉल खत्म हो गई।</string>
+    <string name="call_ended_error">कॉल खत्म हुई: %1$s</string>
+    <string name="back_to_home">होम पर वापस</string>
+    <string name="mute">म्यूट</string>
+    <string name="unmute">अनम्यूट</string>
+    <string name="speaker">स्पीकर</string>
+    <string name="earpiece">इयरपीस</string>
+    <string name="hang_up">कॉल काटें</string>
+    <string name="mode_auto">ऑटो</string>
+    <string name="mode_ptt">दबाकर बोलें</string>
+    <string name="hold_to_talk">बोलने के लिए दबाए रखें</string>
+    <string name="you">आप</string>
+    <string name="they_said_label">ऐसा सुना गया</string>
+    <string name="original_label">मूल</string>
+    <string name="latency_value">%1$d मि.से.</string>
+    <string name="latency_label">देरी</string>
+    <string name="tone_calm">शांत</string>
+    <string name="tone_excited">उत्साहित</string>
+    <string name="tone_angry">गुस्से में</string>
+    <string name="tone_sad">उदास</string>
+    <string name="empty_transcript">बोलना शुरू करें। जो कहा जाएगा वह यहाँ दिखेगा।</string>
+
+    <string name="scam_suspicious_title">सावधान: यह कॉल धोखाधड़ी हो सकती है</string>
+    <string name="scam_high_title">खतरा: ज़्यादातर धोखाधड़ी है। OTP, PIN या पैसे न दें।</string>
+    <string name="call_kaato">कॉल काटो</string>
+    <string name="dismiss">समझ गया</string>
+
+    <string name="history_title">कॉल का इतिहास</string>
+    <string name="history_empty">अभी कोई कॉल नहीं</string>
+    <string name="history_item_title">%1$s (%2$s)</string>
+    <string name="history_item_detail">%1$s · %2$s · देरी %3$d मि.से.</string>
+    <string name="history_scam_none">कोई धोखाधड़ी चेतावनी नहीं</string>
+    <string name="history_scam_suspicious">संदिग्ध कॉल</string>
+    <string name="history_scam_high">धोखाधड़ी की चेतावनी दिखाई गई</string>
+    <string name="history_note">सिर्फ़ कॉल की जानकारी सेव होती है। ऑडियो और टेक्स्ट कभी सेव नहीं होते।</string>
+
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="server_url">सर्वर का पता</string>
+    <string name="server_url_hint">उदाहरण: https://your-app.onrender.com</string>
+    <string name="default_mode">बोलने का तरीका</string>
+    <string name="font_size">अक्षरों का आकार</string>
+    <string name="font_size_sample">अक्षर इतने बड़े दिखेंगे।</string>
+    <string name="back">वापस</string>
+    <string name="open_history">इतिहास</string>
+    <string name="open_settings">सेटिंग्स</string>
+
+    <string name="notification_channel">चल रही कॉल</string>
+    <string name="notification_title">कॉल चल रही है</string>
+    <string name="notification_text">आपकी कॉल का अनुवाद हो रहा है</string>
+    <string name="notification_hang_up">कॉल काटें</string>
+</resources>
