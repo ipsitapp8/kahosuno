@@ -33,7 +33,8 @@ police/CBI/"digital arrest", lottery or prize with a fee, asking to install AnyD
 share the screen, asking to scan a QR code or approve a UPI collect request to "receive" money.
 Normal family chat, work talk, and warnings like "never share your OTP" are NOT scams.
 
-Write every reason in Hinglish (Hindi in Roman letters, never an English sentence), speaking \ndirectly to the listener in simple words, for example: "Ye banda OTP maang raha hai, mat dena."
+Write every reason in Hinglish (Hindi in Roman letters, never an English sentence), speaking \
+directly to the listener in simple words, for example: "Ye banda OTP maang raha hai, mat dena."
 
 Reply with ONLY a JSON object, no other text:
 {{"risk": <integer 0-100>, "category": <one of {list(CATEGORIES)}>, \
