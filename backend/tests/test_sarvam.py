@@ -36,8 +36,8 @@ async def test_translate_sends_expected_body() -> None:
         "input": "namaskar",
         "source_language_code": "kn-IN",
         "target_language_code": "hi-IN",
-        "model": "mayura:v1",
-        "mode": "modern-colloquial",
+        "model": "sarvam-translate:v1",
+        "mode": "formal",
     }
 
 

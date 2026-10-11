@@ -25,8 +25,9 @@ class Settings(BaseSettings):
     gnani_stt_format: str = "transcribe"  # "verbatim" or "transcribe" (adds ITN)
 
     stt_model: str = "saaras:v4"
-    translate_model: str = "mayura:v1"
-    translate_mode: str = "modern-colloquial"
+    # Chosen by benchmark (scripts/smoke.py translate-bench): pure target-language output, faster.
+    translate_model: str = "sarvam-translate:v1"
+    translate_mode: str = "modern-colloquial"  # only used by mayura:v1
     tts_model: str = "bulbul:v3"
     chat_model: str = "sarvam-105b"
 
