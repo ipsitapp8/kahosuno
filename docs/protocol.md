@@ -30,8 +30,9 @@ Supported language codes: `od-IN`, `hi-IN`, `bn-IN`, `en-IN`, `pa-IN` (first pai
 |---|---|---|
 | `joined` | `participant_id`, `peer` (name and language, or `null`) | Reply to `hello`. |
 | `peer_joined` / `peer_left` | `name`, `language` | `peer_left` is sent after the reconnect grace period (10 s). |
-| `transcript` | `speaker` (`self`/`peer`), `original`, `translated`, `tone`, `latency` | Sent to both sides. `latency` = `{stt_ms, translate_ms, tts_ms, total_ms}`. `tts_ms` is time to first audio. |
+| `transcript` | `utterance_id`, `speaker` (`self`/`peer`), `original`, `translated`, `tone` | Sent to both sides when translation is ready. `tone` is `calm` until Phase 5. Silence and noise produce no transcript. |
 | `tts_start` / `tts_end` | `utterance_id` | Wrap the binary `0x02` frames of one utterance. |
+| `latency` | `utterance_id`, `stt_ms`, `translate_ms`, `tts_ms`, `total_ms` | Sent to both sides after the speech is delivered. `tts_ms` is time to first audio; `total_ms` is end of speech to first audio. |
 | `scam_alert` | `level` (`none`/`suspicious`/`high`), `risk` (0-100), `category`, `reasons_hinglish` | Sent only to the person who is listening to the suspicious speaker. |
 | `error` | `code`, `message`, `fatal` | Non-fatal errors never close the call. |
 | `pong` | none | |

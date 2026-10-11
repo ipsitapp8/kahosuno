@@ -108,6 +108,10 @@ class TranslationPipeline:
         t_tr = time.perf_counter()
         yield TranscriptEvent(original, translated, _ms(t0, t_stt), _ms(t_stt, t_tr))
 
+        if not translated.strip():  # silence or noise: nothing to speak
+            yield DoneEvent(Latency(_ms(t0, t_stt), _ms(t_stt, t_tr), 0, _ms(t0, t_tr)))
+            return
+
         first_audio: float | None = None
         for part in split_text(translated, 2500):
             async for chunk in self._client.text_to_speech_stream(part, tgt, pace, temperature):

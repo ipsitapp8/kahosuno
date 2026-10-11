@@ -13,13 +13,14 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.0",
     "aiosqlite>=0.20",
     "numpy>=1.26",
+    "webrtcvad-wheels>=2.0.14",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
     "pytest-asyncio>=0.23",
-    "respx>=0.21",
+    "pytest-timeout>=2.3",
     "ruff>=0.5",
     "mypy>=1.10",
 ]
@@ -29,6 +30,7 @@ include = ["app*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+timeout = 30
 testpaths = ["tests"]
 
 [tool.ruff]
@@ -42,3 +44,7 @@ select = ["E", "F", "I", "B", "UP"]
 python_version = "3.11"
 strict = true
 plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["webrtcvad"]
+ignore_missing_imports = true

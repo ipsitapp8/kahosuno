@@ -20,6 +20,10 @@ class Settings(BaseSettings):
 
     jwt_secret: SecretStr = SecretStr("change-me")
     jwt_ttl_s: int = 600
+    max_frame_bytes: int = 16384
+    max_utterance_s: int = 25
+    reconnect_grace_s: float = 10.0
+    rooms_per_minute: int = 20
     database_url: str = "sqlite+aiosqlite:///./calls.db"
 
 
