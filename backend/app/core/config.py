@@ -12,6 +12,18 @@ class Settings(BaseSettings):
     sarvam_timeout_s: float = 30.0
     sarvam_max_retries: int = 2
 
+    # Vendor per stage. stt/tts: "gnani" | "sarvam". translate: "sarvam" | "indictrans2".
+    stt_provider: str = "gnani"
+    tts_provider: str = "gnani"
+    translate_provider: str = "sarvam"
+
+    gnani_api_key: SecretStr = SecretStr("")
+    gnani_base_url: str = "https://api.vachana.ai"
+    gnani_timeout_s: float = 30.0
+    gnani_max_retries: int = 2
+    gnani_tts_model: str = "timbre-v2.5"
+    gnani_stt_format: str = "transcribe"  # "verbatim" or "transcribe" (adds ITN)
+
     stt_model: str = "saaras:v4"
     translate_model: str = "mayura:v1"
     translate_mode: str = "modern-colloquial"

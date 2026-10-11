@@ -30,11 +30,11 @@ async def test_translate_sends_expected_body() -> None:
         return httpx.Response(200, json={"translated_text": "नमस्ते"})
 
     client = make_client(httpx.MockTransport(handler))
-    assert await client.translate("namaskar", "od-IN", "hi-IN") == "नमस्ते"
+    assert await client.translate("namaskar", "kn-IN", "hi-IN") == "नमस्ते"
     assert seen["key"] == "test-key"
     assert seen["body"] == {
         "input": "namaskar",
-        "source_language_code": "od-IN",
+        "source_language_code": "kn-IN",
         "target_language_code": "hi-IN",
         "model": "mayura:v1",
         "mode": "modern-colloquial",

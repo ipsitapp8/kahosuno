@@ -7,10 +7,9 @@ from app.api import routes, ws
 from app.core.config import Settings, get_settings
 from app.core.logging import setup_logging
 from app.core.security import RateLimiter
+from app.services.factory import Providers, build_providers
 from app.services.metrics import Metrics
-from app.services.pipeline import TranslationPipeline
 from app.services.rooms import RoomRegistry
-from app.services.sarvam import SarvamClient
 from app.services.vad import Segmenter
 
 
@@ -21,15 +20,15 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        client: SarvamClient | None = None
+        providers: Providers | None = None
         if pipeline is None:
-            client = SarvamClient(settings)
-            app.state.pipeline = TranslationPipeline(client)
+            providers = build_providers(settings)
+            app.state.pipeline = providers.pipeline()
         try:
             yield
         finally:
-            if client:
-                await client.aclose()
+            if providers:
+                await providers.aclose()
 
     app = FastAPI(title="Bharat Call Assistant", version="0.1.0", lifespan=lifespan)
     app.state.settings = settings

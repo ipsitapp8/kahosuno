@@ -1,6 +1,5 @@
 """Async client for the Sarvam AI REST APIs (STT, translate, TTS, chat)."""
 
-import asyncio
 import base64
 from collections.abc import AsyncIterator
 from typing import Any
@@ -8,26 +7,22 @@ from typing import Any
 import httpx
 
 from app.core.config import Settings, get_settings
+from app.services.providers import ProviderError, post_with_retry
 
-# Speaker per language. Not yet verified against bulbul:v3: the voices page does not list
-# these names, so the Phase 2 smoke test must confirm them (and an Odia voice).
+# Speaker per language for bulbul:v3. Verified against the live API for od-IN and hi-IN
+# (Phase 2); the others are assumed to work the same way.
 VOICES: dict[str, str] = {
     "hi-IN": "shubh",
+    "kn-IN": "shubh",
     "od-IN": "priya",
     "bn-IN": "aditya",
     "en-IN": "ritu",
     "pa-IN": "rahul",
 }
 
-RETRY_STATUS = {429, 502, 503, 504}
 
-
-class SarvamError(Exception):
+class SarvamError(ProviderError):
     """Raised when a Sarvam call fails after retries."""
-
-    def __init__(self, message: str, status: int | None = None) -> None:
-        super().__init__(message)
-        self.status = status
 
 
 class SarvamClient:
@@ -53,28 +48,9 @@ class SarvamClient:
         return {"api-subscription-key": key}
 
     async def _post(self, path: str, **kwargs: Any) -> httpx.Response:
-        """POST with exponential backoff on 429/5xx and network errors."""
-        attempts = self._s.sarvam_max_retries + 1
-        last: Exception | None = None
-        for attempt in range(attempts):
-            try:
-                resp = await self._http.post(path, headers=self._headers(), **kwargs)
-            except httpx.TransportError as exc:
-                last = exc
-            else:
-                if resp.status_code not in RETRY_STATUS:
-                    if resp.is_error:
-                        raise SarvamError(
-                            f"{path} failed: {resp.status_code} {resp.text[:200]}",
-                            resp.status_code,
-                        )
-                    return resp
-                last = SarvamError(f"{path} returned {resp.status_code}", resp.status_code)
-            if attempt < attempts - 1:
-                await asyncio.sleep(0.4 * 2**attempt)
-        if isinstance(last, SarvamError):
-            raise last
-        raise SarvamError(f"{path} failed: {last!r}")
+        return await post_with_retry(
+            self._http, path, self._headers(), self._s.sarvam_max_retries, SarvamError, **kwargs
+        )
 
     async def speech_to_text(self, wav_bytes: bytes, lang: str) -> str:
         resp = await self._post(
@@ -83,6 +59,12 @@ class SarvamClient:
             data={"model": self._s.stt_model, "language_code": lang},
         )
         return str(resp.json()["transcript"])
+
+    def _mode(self) -> str:
+        # sarvam-translate:v1 only supports the formal mode
+        return "formal" if self._s.translate_model.startswith("sarvam-translate") else (
+            self._s.translate_mode
+        )
 
     async def translate(self, text: str, src: str, tgt: str) -> str:
         if src == tgt or not text.strip():
@@ -94,7 +76,7 @@ class SarvamClient:
                 "source_language_code": src,
                 "target_language_code": tgt,
                 "model": self._s.translate_model,
-                "mode": self._s.translate_mode,
+                "mode": self._mode(),
             },
         )
         return str(resp.json()["translated_text"])

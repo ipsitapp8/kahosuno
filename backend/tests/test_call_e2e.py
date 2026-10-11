@@ -10,7 +10,7 @@ from starlette.testclient import WebSocketTestSession
 from tests.conftest import FakePipeline
 from tests.helpers import chunks, silence, speech_pcm
 
-OD = {"name": "Ramesh", "language": "od-IN", "consent": True}
+OD = {"name": "Ramesh", "language": "kn-IN", "consent": True}
 HI = {"name": "Sita", "language": "hi-IN", "consent": True}
 
 Msg = dict[str, Any] | bytes
@@ -70,7 +70,7 @@ def join_both(
     assert recv(wa)["type"] == "joined"  # type: ignore[call-overload]
     hello(wb, HI, **extra)
     joined = recv(wb)
-    assert isinstance(joined, dict) and joined["peer"] == {"name": "Ramesh", "language": "od-IN"}
+    assert isinstance(joined, dict) and joined["peer"] == {"name": "Ramesh", "language": "kn-IN"}
     assert recv(wa)["type"] == "peer_joined"  # type: ignore[call-overload]
 
 
@@ -97,7 +97,7 @@ def test_full_two_way_call(client: TestClient, pipeline: FakePipeline) -> None:
         assert "audio:0x2" in types(reply)
         collect_until(wb, "latency")
 
-    assert [(c[1], c[2]) for c in pipeline.calls] == [("od-IN", "hi-IN"), ("hi-IN", "od-IN")]
+    assert [(c[1], c[2]) for c in pipeline.calls] == [("kn-IN", "hi-IN"), ("hi-IN", "kn-IN")]
     assert all(c[0] > 16000 for c in pipeline.calls)  # about a second of speech or more
     m = client.get("/metrics").json()
     assert m["utterances"] == 2

@@ -7,7 +7,7 @@ import wave
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
 
-from app.services.sarvam import SarvamClient
+from app.services.providers import STTProvider, TranslateProvider, TTSProvider
 
 SAMPLE_RATE = 16000
 MAX_TRANSLATE_CHARS = 900  # mayura:v1 limit is 1000
@@ -85,8 +85,10 @@ def _ms(start: float, end: float) -> int:
 
 
 class TranslationPipeline:
-    def __init__(self, client: SarvamClient) -> None:
-        self._client = client
+    def __init__(self, stt: STTProvider, translate: TranslateProvider, tts: TTSProvider) -> None:
+        self._stt = stt
+        self._translate = translate
+        self._tts = tts
 
     async def process(
         self,
@@ -99,11 +101,11 @@ class TranslationPipeline:
         """Run one utterance (16 kHz mono PCM16). Yields the transcript first, then
         audio chunks as they arrive, then the final latency. `t0` is end of speech."""
         t0 = time.perf_counter()
-        original = await self._client.speech_to_text(pcm_to_wav(pcm), src)
+        original = await self._stt.speech_to_text(pcm_to_wav(pcm), src)
         t_stt = time.perf_counter()
 
         translated = " ".join(
-            [await self._client.translate(part, src, tgt) for part in split_text(original)]
+            [await self._translate.translate(part, src, tgt) for part in split_text(original)]
         )
         t_tr = time.perf_counter()
         yield TranscriptEvent(original, translated, _ms(t0, t_stt), _ms(t_stt, t_tr))
@@ -114,7 +116,7 @@ class TranslationPipeline:
 
         first_audio: float | None = None
         for part in split_text(translated, 2500):
-            async for chunk in self._client.text_to_speech_stream(part, tgt, pace, temperature):
+            async for chunk in self._tts.text_to_speech_stream(part, tgt, pace, temperature):
                 if first_audio is None:
                     first_audio = time.perf_counter()
                 yield AudioEvent(chunk)

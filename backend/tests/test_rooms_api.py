@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from tests.conftest import FakePipeline, make_settings
 
-OD = {"name": "Ramesh", "language": "od-IN", "consent": True}
+OD = {"name": "Ramesh", "language": "kn-IN", "consent": True}
 HI = {"name": "Sita", "language": "hi-IN", "consent": True}
 
 

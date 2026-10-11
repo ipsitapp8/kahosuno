@@ -1,13 +1,13 @@
 # Bharat Call Assistant: WebSocket protocol v1
 
 ## Joining
-1. `POST /rooms` with `{"language": "od-IN", "name": "Ramesh", "consent": true}` returns
+1. `POST /rooms` with `{"language": "kn-IN", "name": "Ramesh", "consent": true}` returns
    `{"room_id": "...", "code": "483920", "token": "<JWT>"}`. The token lasts 10 minutes.
    A second person joins with the room code: `POST /rooms/{code}/join` (same body) returns their token.
 2. Connect to `ws(s)://<host>/ws/v1/rooms/{room_id}?token=<JWT>`.
 3. The first client message must be `hello`. Rooms hold at most 2 participants.
 
-Supported language codes: `od-IN`, `hi-IN`, `bn-IN`, `en-IN`, `pa-IN` (first pair: `od-IN` <-> `hi-IN`).
+Supported language codes: `kn-IN`, `hi-IN`, `bn-IN`, `en-IN`, `pa-IN` (first pair: `kn-IN` <-> `hi-IN`).
 
 ## Frames
 - **Text frames** carry JSON: `{"v": 1, "type": "<name>", ...}`.

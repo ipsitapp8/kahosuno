@@ -51,13 +51,13 @@ def make_pipeline(calls: list[str]) -> TranslationPipeline:
 
     settings = Settings(sarvam_api_key="k")  # type: ignore[arg-type]
     client = SarvamClient(settings, transport=httpx.MockTransport(handler))
-    return TranslationPipeline(client)
+    return TranslationPipeline(client, client, client)
 
 
 async def test_pipeline_event_order_and_latency() -> None:
     calls: list[str] = []
     pipeline = make_pipeline(calls)
-    events = [e async for e in pipeline.process(b"\x00\x00" * 160, "od-IN", "hi-IN", pace=1.1)]
+    events = [e async for e in pipeline.process(b"\x00\x00" * 160, "kn-IN", "hi-IN", pace=1.1)]
 
     assert calls == ["/speech-to-text", "/translate", "/text-to-speech/stream"]
     assert isinstance(events[0], TranscriptEvent)

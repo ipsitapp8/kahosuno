@@ -5,7 +5,11 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, TypeAdapter
 
 PROTOCOL_VERSION = 1
-SUPPORTED_LANGUAGES = frozenset({"od-IN", "hi-IN", "bn-IN", "en-IN", "pa-IN"})
+# Languages Gnani Prisma (STT) and Timbre (TTS) both handle. Odia is not supported by Gnani STT,
+# so it is roadmap only. Primary pair: kn-IN <-> hi-IN.
+SUPPORTED_LANGUAGES = frozenset(
+    {"kn-IN", "hi-IN", "en-IN", "bn-IN", "pa-IN", "ta-IN", "te-IN", "ml-IN", "mr-IN", "gu-IN"}
+)
 
 AUDIO_IN = 0x01  # client -> server microphone frame
 AUDIO_OUT = 0x02  # server -> client translated speech frame

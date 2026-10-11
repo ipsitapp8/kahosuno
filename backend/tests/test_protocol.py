@@ -6,7 +6,7 @@ from app.models import protocol as pr
 
 def test_parse_hello_defaults() -> None:
     msg = pr.parse_client_message(
-        '{"v":1,"type":"hello","name":"Ramesh","language":"od-IN","consent":true}'
+        '{"v":1,"type":"hello","name":"Ramesh","language":"kn-IN","consent":true}'
     )
     assert isinstance(msg, pr.Hello)
     assert msg.mode == "auto"
