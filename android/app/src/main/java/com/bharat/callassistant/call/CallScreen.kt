@@ -20,7 +20,7 @@ import androidx.compose.material.icons.filled.CallEnd
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.PhoneInTalk
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -264,7 +264,7 @@ private fun Controls(state: CallUiState, vm: CallViewModel) {
                     .height(TouchTarget),
             ) {
                 Icon(
-                    if (state.speakerOn) Icons.Filled.VolumeUp else Icons.Filled.PhoneInTalk,
+                    if (state.speakerOn) Icons.AutoMirrored.Filled.VolumeUp else Icons.Filled.PhoneInTalk,
                     contentDescription = null,
                 )
                 Text(
