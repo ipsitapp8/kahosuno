@@ -173,3 +173,45 @@ async def test_sarvam_translate_uses_formal_mode_for_sarvam_translate_model() ->
     client = SarvamClient(settings, transport=httpx.MockTransport(handler))
     await client.translate("a", "kn-IN", "hi-IN")
     assert seen["model"] == "sarvam-translate:v1" and seen["mode"] == "formal"
+
+
+def wav_header(data_len: int) -> bytes:
+    return (
+        b"RIFF" + (36 + data_len).to_bytes(4, "little") + b"WAVEfmt "
+        + (16).to_bytes(4, "little") + (1).to_bytes(2, "little") + (1).to_bytes(2, "little")
+        + (16000).to_bytes(4, "little") + (32000).to_bytes(4, "little")
+        + (2).to_bytes(2, "little") + (16).to_bytes(2, "little")
+        + b"data" + data_len.to_bytes(4, "little")
+    )
+
+
+def test_strip_wav_header() -> None:
+    from app.services.gnani import strip_wav_header
+
+    pcm = b"\x10\x00\x20\x00"
+    assert len(wav_header(4)) == 44
+    assert strip_wav_header(wav_header(4) + pcm) == pcm
+    assert strip_wav_header(pcm) == pcm  # raw PCM is untouched
+    assert strip_wav_header(wav_header(0)) == b""  # header-only chunk
+
+
+async def test_tts_stream_strips_header_only_from_first_chunk() -> None:
+    first = wav_header(4) + b"\x01\x00\x02\x00"
+    # A later chunk that happens to begin with the bytes "RIFF" is audio, not a header.
+    second = b"RIFF" + b"\x00\x00"
+    enc = [base64.b64encode(x).decode() for x in (first, second)]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            content=sse(
+                ("chunk", {"chunk_index": 0, "audio": enc[0], "is_final": False}),
+                ("chunk", {"chunk_index": 1, "audio": enc[1], "is_final": False}),
+                ("complete", {"chunk_index": 2, "audio": "", "is_final": True}),
+            ),
+        )
+
+    client = make_client(httpx.MockTransport(handler))
+    chunks = [c async for c in client.text_to_speech_stream("x", "hi-IN")]
+    assert chunks == [b"\x01\x00\x02\x00", b"RIFF\x00\x00"]
+    assert not any(c.startswith(b"RIFF" + (40).to_bytes(4, "little")) for c in chunks)

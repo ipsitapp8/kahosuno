@@ -33,6 +33,20 @@ SPEED_MIN, SPEED_MAX = 0.85, 1.15
 SAMPLE_RATE = 16000
 
 
+def strip_wav_header(chunk: bytes) -> bytes:
+    """Drop a RIFF/WAV header if the first streamed chunk carries one.
+
+    We ask for raw PCM (container=raw), so normally there is none. If the API ever sends one
+    anyway, passing it on would play as a click at the start of every utterance.
+    """
+    if not chunk.startswith(b"RIFF"):
+        return chunk
+    data_at = chunk.find(b"data")
+    if data_at == -1 or data_at + 8 > len(chunk):
+        return chunk[44:]  # canonical 44-byte header
+    return chunk[data_at + 8 :]
+
+
 class GnaniError(ProviderError):
     """Raised when a Gnani call fails after retries."""
 
@@ -132,6 +146,7 @@ class GnaniClient:
                     f"tts stream failed: {resp.status_code} {detail}", resp.status_code
                 )
             event = ""
+            first = True
             async for line in resp.aiter_lines():
                 if line.startswith("event:"):
                     event = line[6:].strip()
@@ -144,6 +159,10 @@ class GnaniClient:
                         raise GnaniError(f"tts stream error: {payload[:200]}")
                     audio = data.get("audio")
                     if event == "chunk" and audio:
-                        yield base64.b64decode(audio)
+                        pcm = base64.b64decode(audio)
+                        if first:
+                            pcm, first = strip_wav_header(pcm), False
+                        if pcm:
+                            yield pcm
                     elif event == "complete" or data.get("is_final"):
                         return

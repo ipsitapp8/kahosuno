@@ -79,7 +79,7 @@ def test_full_two_way_call(client: TestClient, pipeline: FakePipeline) -> None:
     with client.websocket_connect(url(a)) as wa, client.websocket_connect(url(b)) as wb:
         join_both(client, wa, wb, a, b)
 
-        speak(wa, speech_pcm())  # Odia speaker talks, VAD finds the utterance by itself
+        speak(wa, speech_pcm())  # Kannada speaker talks, VAD finds the utterance by itself
         heard = collect_until(wb, "latency")
         assert types(heard) == [
             "transcript", "tts_start", "audio:0x2", "audio:0x2", "tts_end", "latency",

@@ -10,8 +10,8 @@ SILENCE_100MS = b"\x00\x00" * 1600
 
 
 def speech_pcm() -> bytes:
-    """Real speech (Odia, synthesised by Sarvam TTS), 16 kHz mono PCM16."""
-    pcm = wav_to_pcm((FIXTURES / "odia_speech.wav").read_bytes())
+    """Speech (Kannada, synthesised by Sarvam TTS), 16 kHz mono PCM16."""
+    pcm = wav_to_pcm((FIXTURES / "kannada_speech.wav").read_bytes())
     loud = np.flatnonzero(np.abs(np.frombuffer(pcm, dtype="<i2")) > 300)
     return pcm[loud[0] * 2 : (loud[-1] + 1) * 2]  # trim the TTS lead-in/tail silence
 
