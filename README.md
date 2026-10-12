@@ -117,6 +117,14 @@ Free tier ki baatein: ~15 min khali rehne par server so jaata hai, pehli request
    vibration ke saath. **Call kaato** dabane se call turant kat jaati hai.
 5. **History** mein dono calls dikhti hain: sirf time, bhasha, delay, scam level. Awaaz ya text nahi.
 
+**Akele test karna ho** (doosra phone nahi hai)? `demo_peer.py` doosre insaan ka kaam karta hai: room code do, phir jo
+likhoge wo Hindi mein bola jayega aur app mein translate hokar dikhega:
+
+```bash
+cd backend
+PYTHONPATH=. .venv\Scripts\python scripts\demo_peer.py 123456      # /greet  /family  /scam  /bye, ya kuch bhi likhein
+```
+
 ## Settings (backend `.env`)
 
 | Variable | Matlab | Default |
