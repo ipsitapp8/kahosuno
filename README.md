@@ -1,4 +1,6 @@
-# Bharat Call Assistant
+# KahoSuno
+
+> **Kaho apni boli mein. Suno apni boli mein.**
 
 **Voice powered by Gnani Prisma (STT) and Timbre (TTS).**
 

@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BharatCallAssistant"
+rootProject.name = "KahoSuno"
 include(":app")

@@ -58,7 +58,7 @@ val BigButton = 68.dp
  * needs very large text can make it bigger than the phone's own setting allows.
  */
 @Composable
-fun BharatTheme(fontScale: Float = 1f, content: @Composable () -> Unit) {
+fun KahoSunoTheme(fontScale: Float = 1f, content: @Composable () -> Unit) {
     val density = LocalDensity.current
     CompositionLocalProvider(
         LocalDensity provides Density(density.density, density.fontScale * fontScale),

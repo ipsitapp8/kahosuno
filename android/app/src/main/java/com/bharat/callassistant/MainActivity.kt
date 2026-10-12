@@ -19,7 +19,7 @@ import com.bharat.callassistant.history.HistoryScreen
 import com.bharat.callassistant.join.JoinScreen
 import com.bharat.callassistant.settings.SettingsScreen
 import com.bharat.callassistant.settings.SettingsViewModel
-import com.bharat.callassistant.ui.BharatTheme
+import com.bharat.callassistant.ui.KahoSunoTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         val start = if (callController.state.value.isActive) Routes.CALL else Routes.JOIN
         setContent {
             val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
-            BharatTheme(fontScale = settings.fontScale) {
+            KahoSunoTheme(fontScale = settings.fontScale) {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val nav = rememberNavController()
                     NavHost(

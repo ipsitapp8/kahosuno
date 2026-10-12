@@ -42,7 +42,12 @@ def create_app(
                 await providers.aclose()
             await store.close()
 
-    app = FastAPI(title="Bharat Call Assistant", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(
+        title="KahoSuno",
+        description="Kaho apni boli mein. Suno apni boli mein.",
+        version="0.1.0",
+        lifespan=lifespan,
+    )
     app.state.settings = settings
     app.state.pipeline = pipeline
     app.state.chat = chat

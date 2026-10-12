@@ -28,14 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the backend image
-        run: docker build -t bharat-call-backend backend
+        run: docker build -t kahosuno-backend backend
       - name: Start it and check /health
         run: |
-          docker run -d --name bca -p 8000:8000 \
+          docker run -d --name kahosuno -p 8000:8000 \
             -e JWT_SECRET="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')" \
-            bharat-call-backend
+            kahosuno-backend
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8000/health && exit 0; sleep 2; done
-          docker logs bca
+          docker logs kahosuno
           exit 1
 
   android:

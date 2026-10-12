@@ -1,4 +1,4 @@
-# Bharat Call Assistant: WebSocket protocol v1
+# KahoSuno: WebSocket protocol v1
 
 ## Joining
 1. `POST /rooms` with `{"language": "kn-IN", "name": "Ramesh", "consent": true}` returns

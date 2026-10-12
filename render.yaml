@@ -3,7 +3,7 @@
 # disk is wiped on every deploy, so call records (numbers only) do not survive redeploys.
 services:
   - type: web
-    name: bharat-call-assistant
+    name: kahosuno
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend

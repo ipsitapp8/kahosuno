@@ -1,7 +1,9 @@
 # Pitch notes: Gnani AI "Great Indian AI Internship Challenge" (deadline 10 Nov 2026)
 
+**KahoSuno: Kaho apni boli mein. Suno apni boli mein.**
+
 ## One line
-Bharat Call Assistant lets a Kannada speaker and a Hindi speaker talk on a normal-feeling call, with live
+KahoSuno lets a Kannada speaker and a Hindi speaker talk on a normal-feeling call, with live
 translation and a scam shield. **Voice powered by Gnani Prisma (STT) and Timbre (TTS).**
 
 ## Problem

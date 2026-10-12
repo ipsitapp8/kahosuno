@@ -1,5 +1,5 @@
-# Bharat Call Assistant backend. Build from the repo root or from backend/:
-#   docker build -t bharat-call-backend backend
+# KahoSuno backend. Build from the repo root or from backend/:
+#   docker build -t kahosuno-backend backend
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

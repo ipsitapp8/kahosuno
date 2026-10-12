@@ -1,8 +1,10 @@
 # Run the backend locally in a container:  docker compose up --build
+name: kahosuno
 # Needs backend/.env with GNANI_API_KEY, SARVAM_API_KEY and JWT_SECRET (32+ random characters).
 services:
   backend:
     build: ./backend
+    image: kahosuno-backend
     env_file: ./backend/.env
     environment:
       APP_ENV: production

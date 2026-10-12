@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">भारत कॉल असिस्टेंट</string>
 
     <string name="join_title">अपनी भाषा में बात करें</string>
     <string name="join_subtitle">दोनों लोग अपनी-अपनी भाषा बोलते हैं। ऐप तुरंत अनुवाद करता है।</string>
