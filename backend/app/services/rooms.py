@@ -6,6 +6,7 @@ import time
 import uuid
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 
 from fastapi import WebSocket
 
@@ -41,12 +42,48 @@ class Participant:
     said_bye: bool = False  # left on purpose: no reconnect grace period
 
 
+MAX_STORED_LINES = 500
+_SCAM_RANK = {"none": 0, "suspicious": 1, "high": 2}
+
+
+@dataclass
+class TranscriptEntry:
+    at: datetime
+    language: str
+    original: str
+    translated: str
+
+
+@dataclass
+class RoomStats:
+    """What is kept about a call once it is over: numbers, never audio or names.
+
+    Transcript lines are collected only for people who opted in (`store_transcript`)."""
+
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    connected: bool = False  # somebody actually joined, so the call is worth recording
+    languages: list[str] = field(default_factory=list)
+    total_ms: list[int] = field(default_factory=list)
+    errors: int = 0
+    max_scam: str = "none"
+    lines: list[TranscriptEntry] = field(default_factory=list)
+
+    def note_scam(self, level: str) -> None:
+        if _SCAM_RANK.get(level, 0) > _SCAM_RANK[self.max_scam]:
+            self.max_scam = level
+
+    def add_line(self, language: str, original: str, translated: str) -> None:
+        if len(self.lines) < MAX_STORED_LINES:
+            self.lines.append(TranscriptEntry(datetime.now(UTC), language, original, translated))
+
+
 @dataclass(eq=False)
 class Room:
     id: str
     code: str
     participants: dict[str, Participant] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
+    stats: RoomStats = field(default_factory=RoomStats)
 
     def peer_of(self, p: Participant) -> Participant | None:
         for other in self.participants.values():
@@ -56,6 +93,7 @@ class Room:
 
 
 LeftCallback = Callable[[Room, Participant], Awaitable[None]]
+ClosedCallback = Callable[[Room], Awaitable[None]]
 
 
 class RoomRegistry:
@@ -68,7 +106,9 @@ class RoomRegistry:
         join_ttl_s: float,
         on_left: LeftCallback | None = None,
         shield_factory: Callable[[], ScamShield | None] | None = None,
+        on_closed: ClosedCallback | None = None,
     ) -> None:
+        self._on_closed = on_closed
         self._rooms: dict[str, Room] = {}
         self._codes: dict[str, str] = {}
         self._segmenter_factory = segmenter_factory
@@ -109,6 +149,8 @@ class RoomRegistry:
             shield=self._shield_factory() if self._shield_factory else None,
         )
         room.participants[p.id] = p
+        if language not in room.stats.languages:
+            room.stats.languages.append(language)
         # A token that is never used must not hold the slot forever.
         self._schedule_removal(room, p, self._join_ttl_s)
         return p
@@ -140,8 +182,11 @@ class RoomRegistry:
     async def _remove_after(self, room: Room, p: Participant, delay: float) -> None:
         await asyncio.sleep(delay)
         room.participants.pop(p.id, None)
-        if not room.participants:
+        closed = not room.participants and room.id in self._rooms
+        if closed:
             self._rooms.pop(room.id, None)
             self._codes.pop(room.code, None)
         if self._on_left and p.hello_done:
             await self._on_left(room, p)
+        if closed and self._on_closed:
+            await self._on_closed(room)

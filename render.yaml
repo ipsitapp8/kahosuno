@@ -1,0 +1,25 @@
+# Render Blueprint: deploys the backend as a Docker web service on the free plan.
+# Free plan notes: the service sleeps after ~15 min idle (first request wakes it, ~1 min) and its
+# disk is wiped on every deploy, so call records (numbers only) do not survive redeploys.
+services:
+  - type: web
+    name: bharat-call-assistant
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GNANI_API_KEY
+        sync: false
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:////data/calls.db
+      # Render's proxy sits in front of the app, so trust its X-Forwarded-For for client IPs.
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"

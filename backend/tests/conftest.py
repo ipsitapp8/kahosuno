@@ -43,6 +43,7 @@ def make_settings(**overrides: object) -> Settings:
     base: dict[str, object] = {
         "jwt_secret": "test-secret-0123456789-0123456789-xyz",
         "sarvam_api_key": "",
+        "database_url": "sqlite+aiosqlite:///:memory:",
     }
     return Settings(**{**base, **overrides})  # type: ignore[arg-type]
 

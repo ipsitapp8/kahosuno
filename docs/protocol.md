@@ -2,7 +2,7 @@
 
 ## Joining
 1. `POST /rooms` with `{"language": "kn-IN", "name": "Ramesh", "consent": true}` returns
-   `{"room_id": "...", "code": "483920", "token": "<JWT>"}`. The token lasts 10 minutes.
+   `{"room_id": "...", "code": "483920", "token": "<JWT>"}`. The token works for 1 hour (so a call can reconnect), but a seat that is never used is given back after 10 minutes.
    A second person joins with the room code: `POST /rooms/{code}/join` (same body) returns their token.
 2. Connect to `ws(s)://<host>/ws/v1/rooms/{room_id}?token=<JWT>`.
 3. The first client message must be `hello`. Rooms hold at most 2 participants.
@@ -41,7 +41,9 @@ Supported language codes: `kn-IN`, `hi-IN`, `bn-IN`, `en-IN`, `pa-IN` (first pai
 
 ## Error codes
 `consent_required`, `bad_token`, `room_full`, `room_not_found`, `rate_limited`, `frame_too_large`,
-`utterance_too_long`, `upstream_failed` (Sarvam call failed, utterance dropped, call continues), `bad_message`.
+`utterance_too_long`, `upstream_failed` (a voice or translation call failed: the utterance is dropped, the call continues), `bad_message`, `server_busy` (HTTP 503: too many open rooms).
+
+A websocket connection refused for `rate_limited` is closed with code `4429`. Other fatal closes use `4401` (bad token), `4403` (no consent), `4404` (room not found) and `4409` (replaced by a newer connection of the same person).
 
 ## Reconnect
 Reconnect with the same token within its validity. The server keeps the participant slot for 10 s after a
@@ -65,3 +67,12 @@ a rolling window of their last 5 turns. The result is sent as `scam_alert` to th
 
 Config (env): `SCAM_ENABLED`, `SCAM_LLM_ENABLED` (rules-only when false or when the LLM fails),
 `SCAM_LLM_TIMEOUT_S` (4), `SCAM_LLM_MIN_INTERVAL_S` (15), `SCAM_LLM_MAX_CALLS` (20 per speaker per call).
+
+## Privacy and what the server keeps
+- **Audio is never written anywhere.** It lives in memory while an utterance is processed and is then dropped.
+- After a call the server stores one row of numbers: start and end time, languages, number of utterances, average and
+  95th percentile delay, number of errors, and the highest scam warning level. No names, no phone numbers, no IP addresses.
+- **Transcripts are opt-in per speaker.** A client sets `store_transcript: true` in `hello` to allow the server to keep
+  what *that person* said (original and translation, with no name). Without it nothing is kept. Stored lines are deleted
+  after `TRANSCRIPT_RETENTION_DAYS` (default 7). The Android app never turns this on.
+- Join tokens travel in the websocket URL, so the server redacts `token=...` from its own logs.

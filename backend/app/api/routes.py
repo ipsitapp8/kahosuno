@@ -37,6 +37,9 @@ def _check(request: Request, body: JoinRequest) -> None:
 async def create_room(body: JoinRequest, request: Request) -> JoinResponse:
     _check(request, body)
     registry: RoomRegistry = request.app.state.registry
+    if len(registry) >= request.app.state.settings.max_rooms:
+        # Rooms live in memory, so cap them rather than let the server run out.
+        raise HTTPException(503, {"code": "server_busy", "message": "Server is busy, try later"})
     room = registry.create_room()
     p = registry.add_participant(room, body.name.strip(), body.language, body.consent)
     token = create_token(request.app.state.settings, room.id, p.id, p.name, p.language)

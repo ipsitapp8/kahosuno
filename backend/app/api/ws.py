@@ -10,7 +10,7 @@ from fastapi import APIRouter, Query, WebSocket
 from pydantic import BaseModel, ValidationError
 
 from app.core.config import Settings
-from app.core.security import TokenError, decode_token
+from app.core.security import RateLimiter, TokenError, decode_token
 from app.models import protocol as pr
 from app.services.metrics import Metrics
 from app.services.pipeline import AudioEvent, DoneEvent, PipelineEvent, TranscriptEvent
@@ -76,7 +76,9 @@ async def process_utterance(
                             ),
                         )
                     await send_msg(peer, pr.TtsStart(utterance_id=uid))
-                    shield_task = asyncio.create_task(run_shield(p, peer, ev.original))
+                    if p.store_transcript:  # only for a speaker who opted in
+                        room.stats.add_line(p.language, ev.original, ev.translated)
+                    shield_task = asyncio.create_task(run_shield(room, p, peer, ev.original))
                     p.tasks.add(shield_task)
                     shield_task.add_done_callback(p.tasks.discard)
                 elif isinstance(ev, AudioEvent):
@@ -94,10 +96,12 @@ async def process_utterance(
                     await send_msg(p, msg)
                     await send_msg(peer, msg)
                     metrics.utterances += 1
+                    room.stats.total_ms.append(lat.total_ms)
                     for stage in ("stt_ms", "translate_ms", "tts_ms", "total_ms"):
                         metrics.record(stage, getattr(lat, stage))
         except Exception:
             metrics.errors += 1
+            room.stats.errors += 1
             log.exception("utterance failed", extra={"participant": p.id})
             await send_msg(
                 p, pr.ErrorMsg(code="upstream_failed", message="Could not translate, try again")
@@ -112,13 +116,14 @@ def start_utterance(
     task.add_done_callback(p.tasks.discard)
 
 
-async def run_shield(p: Participant, listener: Participant, text: str) -> None:
+async def run_shield(room: Room, p: Participant, listener: Participant, text: str) -> None:
     """Score what `p` just said and warn `listener` (never `p`). Must never break the call."""
     if p.shield is None:
         return
     try:
         async with p.shield_lock:  # turns are scored in order
             async for alert in p.shield.on_turn(text):
+                room.stats.note_scam(alert.level)
                 await send_msg(listener, alert)
     except Exception:
         log.exception("scam shield failed", extra={"participant": p.id})
@@ -150,6 +155,7 @@ async def handle_text(
             await send_msg(p, pr.ErrorMsg(code="bad_message", message="Language mismatch"))
             return True
         p.mode, p.store_transcript, p.hello_done = msg.mode, msg.store_transcript, True
+        room.stats.connected = True
         peer = room.peer_of(p)
         info = pr.PeerInfo(name=peer.name, language=peer.language) if peer else None
         await send_msg(p, pr.Joined(participant_id=p.id, peer=info))
@@ -214,6 +220,10 @@ async def call_socket(ws: WebSocket, room_id: str, token: str = Query("")) -> No
         await ws.send_text(pr.ErrorMsg(code=code, message=message, fatal=True).model_dump_json())
         await ws.close(code=close)
 
+    limiter: RateLimiter = state.ws_limiter
+    if not limiter.allow(ws.client.host if ws.client else "unknown"):
+        await reject("rate_limited", "Too many connections, slow down", 4429)
+        return
     try:
         claims = decode_token(state.settings, token)
     except TokenError:

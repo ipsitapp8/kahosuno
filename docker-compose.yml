@@ -1,0 +1,17 @@
+# Run the backend locally in a container:  docker compose up --build
+# Needs backend/.env with GNANI_API_KEY, SARVAM_API_KEY and JWT_SECRET (32+ random characters).
+services:
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      APP_ENV: production
+      DATABASE_URL: sqlite+aiosqlite:////data/calls.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - call-data:/data
+    restart: unless-stopped
+
+volumes:
+  call-data:
