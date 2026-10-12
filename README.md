@@ -1,5 +1,7 @@
 # KahoSuno
 
+[![CI](https://github.com/ipsitapp8/kahosuno/actions/workflows/ci.yml/badge.svg)](https://github.com/ipsitapp8/kahosuno/actions/workflows/ci.yml)
+
 > **Kaho apni boli mein. Suno apni boli mein.**
 
 **Voice powered by Gnani Prisma (STT) and Timbre (TTS).**
@@ -159,7 +161,7 @@ websocket message size 64 KB, security headers, container non-root. Protocol: [d
 - Emulator mein **bolke** nahi dekha aur translated awaaz **sun** nahi sakte the; sirf chalna shuru hota dikha.
 - Scam rules haath se likhe aur synthetic sentences par test hue; asli scam call transcripts par nahi.
 - Hindi/Kannada UI strings kisi native speaker ne check nahi kiye.
-- Render par deploy aur GitHub Actions abhi chalaye nahi gaye.
+- Render par deploy abhi nahi hua. (GitHub Actions ke teeno jobs pass ho chuke hain.)
 - Tone preservation (Phase 5) abhi nahi bana.
 
 ## Roadmap

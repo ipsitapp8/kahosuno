@@ -14,7 +14,7 @@
 - [x] `docker-compose.yml` and `render.yaml` parse and validate (`docker compose config`)
 - [x] `docker compose up --build` starts the backend and it reports healthy; a 100 KB websocket frame is refused (close code 1009)
 - [ ] Deployed on Render and called from the emulator over `https`/`wss`
-- [ ] GitHub Actions run (workflow written, never executed: nothing was pushed)
+- [x] GitHub Actions: backend (ruff, mypy, 198 tests), Docker (build + /health) and Android (assembleDebug + 81 tests) all pass on GitHub's runners
 
 ## Android
 - [x] `assembleDebug` builds; **81 unit tests pass** through Android Gradle
