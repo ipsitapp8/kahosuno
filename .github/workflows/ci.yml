@@ -45,11 +45,15 @@ jobs:
         working-directory: android
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
+      # The runner already has an Android SDK. Gradle downloads the platform it needs once the
+      # licenses are accepted. (android-actions/setup-android failed here: it asks the runner's
+      # newer sdkmanager for a package called "tools" that no longer exists.)
+      - name: Accept Android SDK licenses
+        run: yes | "$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | head -1)" --licenses > /dev/null || true
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - run: ./gradlew assembleDebug test --no-daemon
